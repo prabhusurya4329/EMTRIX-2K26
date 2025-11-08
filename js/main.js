@@ -11,12 +11,8 @@
     };
     spinner();
     
-    
-    // Initiate the wowjs
+    // Initiate WOW.js
     new WOW().init();
-
-
-
 
     // Sticky Navbar
     $(window).scroll(function () {
@@ -27,8 +23,7 @@
         }
     });
     
-    
-    // Dropdown on mouse hover
+    // Dropdown hover
     const $dropdown = $(".dropdown");
     const $dropdownToggle = $(".dropdown-toggle");
     const $dropdownMenu = $(".dropdown-menu");
@@ -37,26 +32,25 @@
     $(window).on("load resize", function() {
         if (this.matchMedia("(min-width: 992px)").matches) {
             $dropdown.hover(
-            function() {
-                const $this = $(this);
-                $this.addClass(showClass);
-                $this.find($dropdownToggle).attr("aria-expanded", "true");
-                $this.find($dropdownMenu).addClass(showClass);
-            },
-            function() {
-                const $this = $(this);
-                $this.removeClass(showClass);
-                $this.find($dropdownToggle).attr("aria-expanded", "false");
-                $this.find($dropdownMenu).removeClass(showClass);
-            }
+                function() {
+                    const $this = $(this);
+                    $this.addClass(showClass);
+                    $this.find($dropdownToggle).attr("aria-expanded", "true");
+                    $this.find($dropdownMenu).addClass(showClass);
+                },
+                function() {
+                    const $this = $(this);
+                    $this.removeClass(showClass);
+                    $this.find($dropdownToggle).attr("aria-expanded", "false");
+                    $this.find($dropdownMenu).removeClass(showClass);
+                }
             );
         } else {
             $dropdown.off("mouseenter mouseleave");
         }
     });
     
-    
-    // Back to top button
+    // Back to top
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {
             $('.back-to-top').fadeIn('slow');
@@ -69,13 +63,11 @@
         return false;
     });
 
-
-    // Facts counter
+    // Counter
     $('[data-toggle="counter-up"]').counterUp({
         delay: 10,
         time: 2000
     });
-
 
     // Modal Video
     $(document).ready(function () {
@@ -83,17 +75,15 @@
         $('.btn-play').click(function () {
             $videoSrc = $(this).data("src");
         });
-        console.log($videoSrc);
 
-        $('#videoModal').on('shown.bs.modal', function (e) {
-            $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
-        })
+        $('#videoModal').on('shown.bs.modal', function () {
+            $("#video").attr('src', $videoSrc + "?autoplay=1&modestbranding=1&showinfo=0");
+        });
 
-        $('#videoModal').on('hide.bs.modal', function (e) {
+        $('#videoModal').on('hide.bs.modal', function () {
             $("#video").attr('src', $videoSrc);
-        })
+        });
     });
-
 
     // Testimonials carousel
     $(".testimonial-carousel").owlCarousel({
@@ -103,44 +93,46 @@
         margin: 24,
         dots: true,
         loop: true,
-        nav : false,
+        nav: false,
         responsive: {
-            0:{
-                items:1
-            },
-            768:{
-                items:2
-            },
-            992:{
-                items:3
-            }
+            0: { items: 1 },
+            768: { items: 2 },
+            992: { items: 3 }
         }
     });
     
 })(jQuery);
 
-const second = 1000,
-      minute = second * 60,
-      hour = minute * 60,
-      day = hour * 24;
+// -------------------- Countdown Timer --------------------
+const countdown = document.getElementById("countdown");
+if (countdown) {
+    const targetDate = new Date("January 8, 2026 09:00:00").getTime();
 
-	let countDown = new Date('Mar 01, 2024 09:30:00').getTime(),
-    x = setInterval(function() {    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
 
-      let now = new Date().getTime(),
-          distance = countDown - now;
+        if (distance <= 0) {
+            countdown.innerHTML = "🎉 Registration Closed!";
+            const btn = document.querySelector("#countdown-section a");
+            if (btn) btn.style.display = "none";
+            clearInterval(interval);
+            return;
+        }
 
-      document.getElementById('days').innerText = Math.floor(distance / (day)),
-        document.getElementById('hours').innerText = Math.floor((distance % (day)) / (hour)),
-        document.getElementById('minutes').innerText = Math.floor((distance % (hour)) / (minute)),
-        document.getElementById('seconds').innerText = Math.floor((distance % (minute)) / second);
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      //do something later when date is reached
-      //if (distance < 0) {
-      //  clearInterval(x);
-      //  'IT'S MY BIRTHDAY!;
-      //}
+        countdown.innerHTML = `
+            <div class="px-3"><span class="fs-2">${days}</span><br>Days</div>
+            <div class="px-3"><span class="fs-2">${hours}</span><br>Hours</div>
+            <div class="px-3"><span class="fs-2">${minutes}</span><br>Mins</div>
+            <div class="px-3"><span class="fs-2">${seconds}</span><br>Secs</div>
+        `;
+    }
 
-    }, second)
-
-    // Get the modal
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+}
